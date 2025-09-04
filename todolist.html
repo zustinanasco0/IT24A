@@ -17,12 +17,18 @@
  <script>
 
 function AddTask() {
-    var taskInput = document.getElementById('taskInput') ;
-
-console.log(taskInput.value) ;
+   getTaskText();
 
 }
 
+function getTaskText() {
+const input =document.getElementById('taskinput') ;
+const text = input.value.trim();
+console,log("getTaskText() called: " + input.value) ;
+
+return{text,input} ;
+
+}
 
  </script>
 
