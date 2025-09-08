@@ -3,25 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To Do List</title>
+    <title>Document</title>
 </head>
 <body>
-    <h1>To Do List</h1>
-    <input type="text"
-            id = "taskinput"
-            placeholder = "add a task"
-    />
-    <button oneclick = "addTask"> Add </button>
     
-    <script>
-        function addTask(){
-             getTaskText();
-        }
-        function getTaskText(){
-            var taskinput = document.getElementById ('taskinput');
-             console.log(taskinput.value);
-        }
-    </script>
-    
-</body>
+    <h1>TO DO LIST</h1>
+    <input type = "text"
+           id = "taskinput"
+           placeholder="Add a task"
+  /> 
+   <button onclick="addTask()">add</button>
+
+   <ul id="tasklist"> Your tasks goes here ...</ul>
+
+ <script>
+
+function addTask() {
+   const taskText = getTaskText();
+
+   if(taskText){
+    addTaskItem(taskText);
+   } else {
+    console.log("No task entered");
+   }
+
+}
+
+function getTaskText() {
+const input =document.getElementById('taskinput');
+const text = input.value.trim();
+
+console.log("getTaskText() called: " + input.value);
+return text;
+}
+
+   function addTaskItem(taskText){
+    const li = document.createElement("li");
+    li.textContent = taskText;
+
+    document.getElementById("tasklist").appendChild(li);
+    console.log("addTaskItem() called ->: ", taskText, Date());
+
+    const deleteBtn = createDeleteButton(li);
+    li.appendChild(deleteBtn);
+}
+
+    function createDeleteButton(li){
+        const deleteBtn = document.createElement("button");
+
+        deleteBtn.textContent="X";
+        deleteBtn.className="delete=btn";
+        deleteBtn.style.marginleft = "8px";
+        deleteBtn.onclick = () => handleDeleteClick(li);
+
+        console.log("createDeleteButton() called ->", li.textContent);
+        return deleteBtn;
+    }
+
+    function handleDeleteClick(li){
+        li.remove();
+        console.log("handleDeleteClick() called ->", li.textContent.replace("x","").trim,Date());
+    }
+ </script>
+
+ </body>
 </html>
