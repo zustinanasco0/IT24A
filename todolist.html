@@ -3,34 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>To Do List</title>
 </head>
 <body>
+    <h1>To Do List</h1>
+    <input type="text"
+            id = "taskinput"
+            placeholder = "add a task"
+    />
+    <button oneclick = "addTask"> Add </button>
     
-    <h1>TO DO LIST</h1>
-    <input type = "text"
-           id = "taskinput"
-           placeholder="Add a task "
-  /> 
-   <button onclick="AddTask()">add</button>
-
- <script>
-
-function AddTask() {
-   getTaskText();
-
-}
-
-function getTaskText() {
-const input =document.getElementById('taskinput') ;
-const text = input.value.trim();
-console,log("getTaskText() called: " + input.value) ;
-
-return{text,input} ;
-
-}
-
- </script>
-
- </body>
+    <script>
+        function addTask(){
+             getTaskText();
+        }
+        function getTaskText(){
+            var taskinput = document.getElementById ('taskinput');
+             console.log(taskinput.value);
+        }
+    </script>
+    
+</body>
 </html>
