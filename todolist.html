@@ -46,6 +46,13 @@ return text;
 
     const deleteBtn = createDeleteButton(li);
     li.appendChild(deleteBtn);
+
+
+    const taskSpan = document.createElement("span") ;
+
+    taskSpan.textContent = taskText;
+    const editBtn = createEditButton(li,taskSpan) ;
+    li.appendChild (editBtn) ;
 }
 
     function createDeleteButton(li){
@@ -64,7 +71,67 @@ return text;
         li.remove();
         console.log("handleDeleteClick() called ->", li.textContent.replace("x","").trim,Date());
     }
+
+  function createEditButton () {  
+     const editBtn = document.createElement("button")
+     editBtn.textContent = "Edit " ;
+     editBtn.classname = "edit - btn " ;
+     editBtn.style.marginleft = "8px" ;
+     editBtn.onclick = () => handleDeleteClick (li) ;
+
+
+     console.log("createEditButton() called =>" , taskSpan.textContent) ;
+     return editBtn ;
+
+     
+ 
+
+  }
+
+  function handleDeleteClick(li) {
+   const currentText = li.firstChild.textContent.trim() ;
+   console.log("handleEditClick() -> current: " , currentText, Date ()) ;
+
+   const newtext = prom ("Edit  your task: " , currentText) ;
+
+
+   if (newtext !== null && newtext.trim() ){
+       li.firstChild.textContent = newtext.trim();
+       console.log("handleEditClick() -> updated " ,newText.trim(), Date()) ;
+
+   } else {
+
+    console.log("handleEditClick( -> no changes made");
+
+
+   }
+
+
+  }
+
+
+  function createDoneButton (taskSpan) {
+   const doneBtn = document.createElement("button") ;
+   doneBtn.textContent = "Done" ;
+   doneBtn.onclick = () => {
+   const li = taskSpan.parentElemen;
+
+
+      taskSpan.classlist.add("done") ;
+
+      const buttons = li.querySelectorAll("button") ;
+      button.forEach(btn=>btn.remove()) ;
+
+      console.log("Task completed", taskSpan.textContent, Date()) ;
+
+   }
+
+ return doneBtn;
+  }
+
  </script>
+
+
 
  </body>
 </html>
