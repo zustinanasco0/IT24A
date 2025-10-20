@@ -38,12 +38,6 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
-var marker = L.marker([8.360179443790004, 124.86812445320841], 17 )     .addTo(map);
-const dogeImage = "<img src='https://static01.nyt.com/images/2020/01/28/multimedia/28xp-memekid3/28cp-memekid3-articleLarge.jpg?quality=75&auto=webp&disable=upscale' class='popup-image' >";   
-const popupContent = `${dogeImage}<br><b>Hello World</b><br>I am a popup` ;
-
-marker.bindPopup(popupContent).openPopup();
-
 function initMap(mapDataUrl) {}
 
 
