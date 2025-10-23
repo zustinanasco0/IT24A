@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Campus Map</title>
+    <title>Campus Map</title>
 
     <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -30,62 +30,69 @@
 </body>
 <script>
 
+function initMap(mapDataUrl){
+    const map = L.map('map').setView([8.3603,124.8684],17);
 
-function initMap(mapDataUrl) {
-  const map  = L.map('map').setView([8.3606,124.8683], 17)
+    //OpenStreetMapLayer
+    const openStreetMap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        maxZoom:19,
+        attribution:'&copy; OpenStreetMap contributors'
+    });
 
-  const openstreetmap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
- 
-    maxZoom : 19,
-    attribution : '&copy; OpenStreet contributors'
+    //Satellite
+    const satellite = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        {attribution:'Tiles (c) Esri - Source: Esri, Maxar, Earthstar Geographics, GIS User Community'}
+    );
 
-}) ;
+    openStreetMap.addTo(map);
+    console.log("Base map tile layer loaded" + Date());
 
-const satelite = L.tileLayer (
-   'https:// server.arcgison.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{x}/{y}',     
-   {attribution:'Tiles (c) Esri - Source: Esri, Maxar, Earthstar Geigraphics, Gis User Community'}
+    const markerGroups ={};
 
-) ;
+    fetch(mapDataUrl)
+        .then(response => response.json())
+        .then(data => {
+            data.forEach( pin => {
+                const type = pin.locationType || "Other";
 
+                //Create Marker Group
+                if(!markerGroups[type]){
+                    markerGroups[type] = L.layerGroup();
+                }
 
-openstreetmap.addto(map) = {} ;
+                //Marker and Popup
+                const marker = L.marker([pin.lat,pin.lng]).addTo(map);
+                const img = `<img src='${pin.img}' class="popup-image">`;
+                marker.bindPopup(`${img}<br><b> ${pin.title} </b><br> ${pin.description}<br> ${pin.locationType}`);
+                console.log(`${pin.name} Loaded ` +Date());
 
-console.log("Base map tile layer  loaded" + Date () ) ;
+                markerGroups[type].addLayer(marker);
+            });
+            //Add all groups to map initially
+            Object.values(markerGroups).forEach(group => group.addTo(map));
 
-const markerGroups = {} ;
-
-fetch(mapDataUrl)
-     .then(response => response.json())
-     .then(data => {
-         data.foreach(pin => {
-  
-            const type = pin.locationType || "Other" ;
-
-            if(!markerGroup[type]){
-                markerGroups[type] = L.layerGroup() ;
-
+            //Layer control
+            const baseMaps={
+                "OpenStreetMap":openStreetMap,
+                "Satellite": satellite
             }
 
-         const marker = L.marker(oin.lat.pin.lng).addTo(map);
-         const img = `img src'${pin.img}' class = "popup-image"> `;
-         marker.bindPopup(`${img}<br><b> ${pin.title} </b> <br> ${pin.description}` ) ;
-         cosnsole.log(`${pin.name} Loaded ` = Date()) ;
+            const overlayMaps={};
 
-
-         markerGroups[type].addLayer(maker) ;
-
-     }) ;
-
-     object.values(markerGroups).forEach(group => group.addTo(map)) ;
-
-     const baseMaps{
-        "OpenStreetMap" : openstreetmap,
-        "Satelite" : satelite
-     }
-
-     
+            //Add marker groups to the map according to layer filter
+            Object.keys(markerGroups).forEach(type=>{
+                overlayMaps[type] = markerGroups[type];
+            });
+            
+            //Add all elements into the map
+            L.control.layers(baseMaps,overlayMaps,{collapsed:false}).addTo(map);
+        })
+        .catch(err => console.error('Error loading JSON', err));
 }
-
+document.addEventListener("DOMContentLoaded",()=>{
+    initMap('campus-map.json');
+;});
 
 </script>
 </html>
